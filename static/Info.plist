@@ -5,7 +5,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>TLDR pages 0.0.2</string>
 	<key>CFBundleName</key>
-	<string>TLDR pages 0.0.2</string>
+	<string>TLDR pages</string>
 	<key>DocSetPlatformFamily</key>
 	<string>tldr</string>
 	<key>isDashDocset</key>

@@ -74,4 +74,5 @@ with open(os.path.join(doc_path, "index.html"), "w+") as html:
 # copy static content
 shutil.copyfile("static/style.css", doc_path+"/style.css")
 shutil.copyfile("static/Info.plist", doc_path_contents+"/Info.plist")
-shutil.copyfile("static/Icon.png", docset_path+"/Icon.png")
+shutil.copyfile("static/icon.png", docset_path+"/icon.png")
+shutil.copyfile("static/icon@2x.png", docset_path+"/icon@2x.png")
