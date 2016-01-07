@@ -5,9 +5,11 @@ import requests as req, zipfile, io, markdown2 as md, sqlite3, os, shutil
 html_tmpl = """<html><head><link rel="stylesheet" type="text/css" href="../style.css"/></head><body><section id="tldr"><div id="page">%content%</div></section></body></html>"""
 
 doc_source = "https://github.com/tldr-pages/tldr/archive/master.zip"
-doc_path_contents  = "tldrpages.docset/Contents/"
-doc_path_resources = "tldrpages.docset/Contents/Resources/"
-doc_path           = "tldrpages.docset/Contents/Resources/Documents/"
+doc_source         = "http://localhost:8000/tldr-master.zip"
+docset_path        = "tldrpages.docset"
+doc_path_contents  = docset_path + "/Contents/"
+doc_path_resources = docset_path + "/Contents/Resources/"
+doc_path           = docset_path + "/Contents/Resources/Documents/"
 doc_pref           = "tldr-master/pages"
 
 if os.path.exists(doc_path):
@@ -70,3 +72,4 @@ with open(os.path.join(doc_path, "index.html"), "w+") as html:
 # copy static content
 shutil.copyfile("static/style.css", doc_path+"/style.css")
 shutil.copyfile("static/Info.plist", doc_path_contents+"/Info.plist")
+shutil.copyfile("static/Icon.png", docset_path+"/Icon.png")
