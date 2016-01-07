@@ -4,8 +4,7 @@ import requests as req, zipfile, io, markdown2 as md, sqlite3, os, shutil
 
 html_tmpl = """<html><head><link rel="stylesheet" type="text/css" href="../style.css"/></head><body><section id="tldr"><div id="page">%content%</div></section></body></html>"""
 
-doc_source = "https://github.com/tldr-pages/tldr/archive/master.zip"
-doc_source         = "http://localhost:8000/tldr-master.zip"
+doc_source         = "https://github.com/tldr-pages/tldr/archive/master.zip"
 docset_path        = "tldrpages.docset"
 doc_path_contents  = docset_path + "/Contents/"
 doc_path_resources = docset_path + "/Contents/Resources/"
