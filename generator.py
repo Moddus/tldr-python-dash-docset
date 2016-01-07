@@ -50,7 +50,10 @@ with zipfile.ZipFile(io.BytesIO(r.content), "r") as archive:
                     print("Could not create dir " + e.strerror)
                     raise SystemExit
 
-            cur.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)', (cmd_name, 'Command', sub_dir+'/'+cmd_name+".html"))
+            if sub_dir != "common":
+                cur.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)', (sub_dir + " " + cmd_name, 'Command', sub_dir+'/'+cmd_name+".html"))
+            else:
+                cur.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)', (cmd_name, 'Command', sub_dir+'/'+cmd_name+".html"))
             doc = markdowner.convert(archive.read(path))
             doc = html_tmpl.replace("%content%", doc)
             with open(os.path.join(doc_path, path[len(doc_pref)+1:].replace(".md", ".html")), "w+") as html:
@@ -60,11 +63,11 @@ db.close()
 
 # Generate tldr pages index.html
 with open(os.path.join(doc_path, "index.html"), "w+") as html:
-    html.write('<html><head></head><body>')
+    html.write('<html><head></head><body><h1>TLDR pages Docset</h1><br/>powered by <a href="http://tldr-pages.github.io">tldr-pages.github.io/</a>')
     for dir in os.listdir(doc_path):
         if os.path.isdir(os.path.join(doc_path, dir)):
             html.write("<h2>%s</h2><ul>" % dir)
-            html.writelines(['<li><a href="%s/%s">%s</a></li>' % (dir, f, f) for f in os.listdir(os.path.join(doc_path, dir))])
+            html.writelines(['<li><a href="%s/%s">%s</a></li>' % (dir, f, f[:-5]) for f in os.listdir(os.path.join(doc_path, dir))])
             html.write("</ul>")
     html.write('</body></html>')
 
