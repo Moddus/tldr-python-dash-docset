@@ -2,7 +2,7 @@
 This project builds a [Dash][1] docset for the [tldr-pages][3]
 user manual.
 
-Thanks to [tldr.jsx][4] for your greate css !
+Thanks to [tldr.jsx][4] for your great CSS!
 
 [1]: http://kapeli.com/dash
 [2]: http://zealdocs.org/
