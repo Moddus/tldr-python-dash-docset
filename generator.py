@@ -56,7 +56,7 @@ with zipfile.ZipFile(io.BytesIO(r.content), "r") as archive:
             doc = markdowner.convert(archive.read(path))
             doc = html_tmpl.replace("%content%", doc)
             with open(os.path.join(doc_path, path[len(doc_pref)+1:].replace(".md", ".html")), "w+") as html:
-                html.write(doc)
+                html.write(doc.encode("utf-8"))
 db.commit()
 db.close()
 
