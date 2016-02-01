@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import requests as req, zipfile, io, markdown2 as md, sqlite3, os, shutil
+import requests as req, zipfile, io, markdown2 as md, sqlite3, os, shutil, tarfile
 
 html_tmpl = """<html><head><link rel="stylesheet" type="text/css" href="../style.css"/></head><body><section id="tldr"><div id="page">%content%</div></section></body></html>"""
 
@@ -76,3 +76,8 @@ shutil.copyfile("static/style.css", doc_path+"/style.css")
 shutil.copyfile("static/Info.plist", doc_path_contents+"/Info.plist")
 shutil.copyfile("static/icon.png", docset_path+"/icon.png")
 shutil.copyfile("static/icon@2x.png", docset_path+"/icon@2x.png")
+
+# create tgz
+with tarfile.open("tldr_pages.tgz", "w") as docset:
+    docset.add(docset_path)
+
