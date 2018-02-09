@@ -4,6 +4,17 @@ user manual.
 
 Thanks to [tldr.jsx][4] for your great CSS!
 
+### Build
+
+If you have python 3 and the [required packages](requirements.txt):
+
+    python generator.py
+
+Or use Docker to create an environment and build:
+
+    docker-compose up
+
+
 [1]: http://kapeli.com/dash
 [2]: http://zealdocs.org/
 [3]: https://github.com/tldr-pages/tldr
