@@ -2,8 +2,18 @@
 
 import requests as req, zipfile, io, markdown2 as md, sqlite3, os, shutil, tarfile
 
-html_tmpl = """<html><head><link rel="stylesheet" type="text/css" href="../style.css"/></head><body><section id="tldr"><div id="page">%content%</div></section></body></html>"""
+html_tmpl = """<html><!-- Online page at {url} -->
+    <head>
+        <link rel="stylesheet" type="text/css" href="../style.css"/>
+    </head>
+    <body>
+        <section id="tldr">
+            <div id="page">{content}</div>
+        </section>
+    </body>
+</html>"""
 
+online_url         = "https://github.com/tldr-pages/tldr/blob/master/pages"
 doc_source         = "https://github.com/tldr-pages/tldr/archive/master.zip"
 docset_path        = "tldrpages.docset"
 doc_path_contents  = docset_path + "/Contents/"
@@ -54,7 +64,7 @@ with zipfile.ZipFile(io.BytesIO(r.content), "r") as archive:
             else:
                 cur.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)', (cmd_name, 'Command', sub_dir+'/'+cmd_name+".html"))
             doc = markdowner.convert(archive.read(path))
-            doc = html_tmpl.replace("%content%", doc)
+            doc = html_tmpl.format(url=online_url+'/'+sub_dir+'/'+cmd_name, content=doc)
             with open(os.path.join(doc_path, path[len(doc_pref)+1:].replace(".md", ".html")), "wb") as html:
                 html.write(doc.encode("utf-8"))
 db.commit()
@@ -62,7 +72,7 @@ db.close()
 
 # Generate tldr pages index.html
 with open(os.path.join(doc_path, "index.html"), "w+") as html:
-    html.write('<html><head></head><body><h1>TLDR pages Docset</h1><br/>powered by <a href="http://tldr-pages.github.io">tldr-pages.github.io/</a>')
+    html.write('<html><!-- Online page at '+online_url+' --><head></head><body><h1>TLDR pages Docset</h1><br/>powered by <a href="http://tldr-pages.github.io">tldr-pages.github.io/</a>')
     for dir in os.listdir(doc_path):
         if os.path.isdir(os.path.join(doc_path, dir)):
             html.write("<h2>%s</h2><ul>" % dir)
