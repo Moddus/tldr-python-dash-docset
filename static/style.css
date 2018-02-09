@@ -7,41 +7,8 @@ body {
   background: #FEFEFE;
   color: #151515; }
 
-.github-corner {
-  border: 0;
-  fill: #FEFEFE;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 99;
-  padding: 0.5em; }
-  @media only screen and (min-device-width: 1024px) and (min-device-height: 728px) {
-    .github-corner {
-      padding: 0.2em; } }
-
-#tldr #search-bar {
-  font-size: 1.5em;
-  background-color: #151515;
-  color: #FEFEFE;
-  padding: 0.5em;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%; }
-  #tldr #search-bar * {
-    font-family: "Source Code Pro", courier new, courier; }
-  #tldr #search-bar input, #tldr #search-bar input:focus {
-    border: none;
-    outline: none;
-    background-color: #151515;
-    color: #FEFEFE; }
-  @media only screen and (orientation: landscape) {
-    #tldr #search-bar {
-      font-size: 2em; } }
-  @media only screen and (min-device-width: 1024px) and (min-device-height: 728px) {
-    #tldr #search-bar {
-      font-size: 1em; } }
 #tldr #page {
+  margin-bottom: 4em;
   font-size: 1.25em;}
   #tldr #page p {
     margin: 0; }
@@ -54,9 +21,12 @@ body {
     font-family: "Source Code Pro", courier new, courier;
     background-color: #f2f2f2;
     color: #212121;
-    display: block;
-    padding: 0.55em 1.25em;
+    display: inline-block;
+    padding: 0.25em 0.5em; 
     margin: 0; }
+  #tldr #page > p code {
+    display: block;
+    padding: 0.55em 1.25em; }
   #tldr #page ul {
     list-style: none;
     padding: 0 !important;
@@ -67,10 +37,8 @@ body {
   @media only screen and (min-device-width: 1024px) {
     #tldr #page {
       font-size: 1em; }
-      #tldr #page code {
+      #tldr #page > p code {
         padding-left: 3em; }
         #tldr #page ul li:before {
           content: "*";
           padding: 0 12px; } }
-
-/*# sourceMappingURL=index.css.map */
