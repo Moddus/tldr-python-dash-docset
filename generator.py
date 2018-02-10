@@ -4,6 +4,7 @@ import requests as req, zipfile, io, markdown2 as md, sqlite3, os, shutil, tarfi
 
 html_tmpl = """<html><!-- Online page at {url} -->
     <head>
+        <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="../style.css"/>
     </head>
     <body>
@@ -72,7 +73,7 @@ db.close()
 
 # Generate tldr pages index.html
 with open(os.path.join(doc_path, "index.html"), "w+") as html:
-    html.write('<html><!-- Online page at '+online_url+' --><head></head><body><h1>TLDR pages Docset</h1><br/>powered by <a href="http://tldr-pages.github.io">tldr-pages.github.io/</a>')
+    html.write('<html><!-- Online page at '+online_url+' --><head><meta charset="UTF-8"></head><body><h1>TLDR pages Docset</h1><br/>powered by <a href="http://tldr-pages.github.io">tldr-pages.github.io/</a>')
     for dir in sorted(os.listdir(doc_path)):
         if os.path.isdir(os.path.join(doc_path, dir)):
             html.write("<h2>%s</h2><ul>" % dir)
