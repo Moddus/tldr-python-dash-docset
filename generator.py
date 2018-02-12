@@ -48,7 +48,7 @@ cur.execute('CREATE TABLE searchIndex(id INTEGER PRIMARY KEY, name TEXT, type TE
 cur.execute('CREATE UNIQUE INDEX anchor ON searchIndex (name, type, path);')
 
 # Generate tldr pages to HTML documents
-markdowner = md.Markdown()
+markdowner = md.Markdown(extras=["code-friendly"])
 with zipfile.ZipFile(io.BytesIO(r.content), "r") as archive:
     for path in archive.namelist():
         if path.startswith(doc_pref) and path.endswith(".md"):
