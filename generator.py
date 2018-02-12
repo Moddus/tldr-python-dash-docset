@@ -73,10 +73,10 @@ db.close()
 
 # Generate tldr pages index.html
 with open(os.path.join(doc_path, "index.html"), "w+") as html:
-    html.write('<html><!-- Online page at '+online_url+' --><head><meta charset="UTF-8"></head><body><h1>TLDR pages Docset</h1><br/>powered by <a href="http://tldr-pages.github.io">tldr-pages.github.io/</a>')
+    html.write('<html><!-- Online page at '+online_url+' --><head><meta charset="UTF-8"><title>TLDR pages</title></head><body><h1>TLDR pages</h1><br/>powered by <a href="http://tldr-pages.github.io">tldr-pages.github.io/</a>')
     for dir in sorted(os.listdir(doc_path)):
         if os.path.isdir(os.path.join(doc_path, dir)):
-            html.write("<h2>%s</h2><ul>" % dir)
+            html.write('<a name="//apple_ref/cpp/Section/{name}" class="dashAnchor"></a><h2>{name}</h2><ul>'.format(name=dir))
             html.writelines(['<li><a href="%s/%s">%s</a></li>' % (dir, f, f[:-5]) for f in sorted(os.listdir(os.path.join(doc_path, dir)))])
             html.write("</ul>")
     html.write('</body></html>')
