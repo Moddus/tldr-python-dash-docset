@@ -7,6 +7,10 @@ body {
   background: #FEFEFE;
   color: #151515; }
 
+code em {
+  color: lightseagreen;
+  font-style: normal; }
+
 #tldr #page {
   margin-bottom: 4em;
   font-size: 1.25em;}

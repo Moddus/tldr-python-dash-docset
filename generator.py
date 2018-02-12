@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import requests as req, zipfile, io, markdown2 as md, sqlite3, os, shutil, tarfile
+import re
 
 html_tmpl = """<html><!-- Online page at {url} -->
     <head>
@@ -65,6 +66,7 @@ with zipfile.ZipFile(io.BytesIO(r.content), "r") as archive:
             else:
                 cur.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)', (cmd_name, 'Command', sub_dir+'/'+cmd_name+".html"))
             doc = markdowner.convert(archive.read(path))
+            doc = re.sub(r'{{(.*?)}}', r'<em>\1</em>', doc)
             doc = html_tmpl.format(url=online_url+'/'+sub_dir+'/'+cmd_name, content=doc)
             with open(os.path.join(doc_path, path[len(doc_pref)+1:].replace(".md", ".html")), "wb") as html:
                 html.write(doc.encode("utf-8"))
