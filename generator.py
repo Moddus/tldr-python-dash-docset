@@ -21,7 +21,7 @@ docset_path        = "tldrpages.docset"
 doc_path_contents  = docset_path + "/Contents/"
 doc_path_resources = docset_path + "/Contents/Resources/"
 doc_path           = docset_path + "/Contents/Resources/Documents/"
-doc_pref           = "tldr-master/pages"
+doc_pref           = "tldr-master/pages/"
 
 if os.path.exists(doc_path):
     try: shutil.rmtree(doc_path)
@@ -53,7 +53,7 @@ with zipfile.ZipFile(io.BytesIO(r.content), "r") as archive:
     for path in archive.namelist():
         if path.startswith(doc_pref) and path.endswith(".md"):
             cmd_name = path[path.rfind("/")+1:-3]
-            sub_dir = path[len(doc_pref)+1:path.rfind("/")]
+            sub_dir = path[len(doc_pref):path.rfind("/")]
             sub_path = os.path.join(doc_path, sub_dir)
             if not os.path.exists(sub_path):
                 try: os.mkdir(sub_path)
@@ -68,7 +68,7 @@ with zipfile.ZipFile(io.BytesIO(r.content), "r") as archive:
             doc = markdowner.convert(archive.read(path))
             doc = re.sub(r'{{(.*?)}}', r'<em>\1</em>', doc)
             doc = html_tmpl.format(url=online_url+'/'+sub_dir+'/'+cmd_name+'.md', content=doc)
-            with open(os.path.join(doc_path, path[len(doc_pref)+1:].replace(".md", ".html")), "wb") as html:
+            with open(os.path.join(doc_path, path[len(doc_pref):].replace(".md", ".html")), "wb") as html:
                 html.write(doc.encode("utf-8"))
 db.commit()
 db.close()
