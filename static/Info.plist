@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleIdentifier</key>
-	<string>TLDR pages 0.0.3.2</string>
+	<string>TLDR pages 0.0.3.3</string>
 	<key>CFBundleName</key>
 	<string>TLDR pages</string>
 	<key>DocSetPlatformFamily</key>
