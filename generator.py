@@ -15,13 +15,13 @@ html_tmpl = """<html><!-- Online page at {url} -->
     </body>
 </html>"""
 
-online_url         = "https://github.com/tldr-pages/tldr/blob/master/pages"
-doc_source         = "https://github.com/tldr-pages/tldr/archive/master.zip"
+online_url         = "https://github.com/tldr-pages/tldr/blob/main/pages"
+doc_source         = "https://github.com/tldr-pages/tldr/archive/refs/heads/main.zip"
 docset_path        = "tldrpages.docset"
 doc_path_contents  = docset_path + "/Contents/"
 doc_path_resources = docset_path + "/Contents/Resources/"
 doc_path           = docset_path + "/Contents/Resources/Documents/"
-doc_pref           = "tldr-master/pages/"
+doc_pref           = "tldr-main/pages/"
 
 if os.path.exists(doc_path):
     try: shutil.rmtree(doc_path)
