@@ -4,6 +4,10 @@ user manual.
 
 Thanks to [tldr.jsx][4] for your great CSS!
 
+### This is a fork
+
+The original author of this project, [Moddus](https://github.com/Moddus/tldr-python-dash-docset), appears to have abandoned it. This fork contains some [bug fixes and small improvements](https://github.com/Moddus/tldr-python-dash-docset/pull/5) to the original.
+
 ### Build
 
 If you have python 3 and the [required packages](requirements.txt):
