@@ -5,13 +5,12 @@ on:
         - cron: '0 0 1 * *'
     workflow_dispatch:
 
-env:
-    new_version: $(date -u +"%Y-%m-%d")
-
 jobs:
     build:
         runs-on: ubuntu-latest
         steps:
+            - name: Create version environment variable
+              run: echo "new_version=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
             - name: Checkout code
               uses: actions/checkout@v4
             - name: Set version number
