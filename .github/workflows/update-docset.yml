@@ -15,7 +15,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
             - name: Set version number
-              run: sed -i '' "s/YYYY-MM-DD/$new_version/" static/Info.plist
+              run: sed -i "s/YYYY-MM-DD/$new_version/" static/Info.plist
             - name: Build docset
               run: docker compose up
 
