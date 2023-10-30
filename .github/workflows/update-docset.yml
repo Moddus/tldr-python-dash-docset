@@ -5,6 +5,9 @@ on:
         - cron: '0 0 1 * *'
     workflow_dispatch:
 
+env:
+    new_version: $(date -u +"%Y-%m-%d")
+
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -12,7 +15,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
             - name: Set version number
-              run: sed -i '' "s/YYYY-MM-DD/$(date -u +"%Y-%m-%d")/" static/Info.plist
+              run: sed -i '' "s/YYYY-MM-DD/$new_version/" static/Info.plist
             - name: Build docset
               run: docker compose up
 
@@ -39,12 +42,12 @@ jobs:
               run: pwd
             - name: Update version number in docset.json
               run: |
-                sed -i 's/"version": ".*"/"version": "$(date +%Y-%m-%d)"/' Dash-User-Contributions/docsets/tldr/docset.json
+                sed -i 's/"version": ".*"/"version": "$new_version"/' Dash-User-Contributions/docsets/tldr/docset.json
             - name: Move docset
               run: mv tldr_pages.tgz Dash-User-Contributions/docsets/tldr/
             - name: Commit changes
               run: |
                 cd Dash-User-Contributions
                 git add --all .
-                git commit -m "Update TLDR pages docset to $(date +%Y-%m-%d)"
+                git commit -m "Update TLDR pages docset to $new_version"
                 git push
