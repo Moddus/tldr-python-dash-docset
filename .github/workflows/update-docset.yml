@@ -1,0 +1,51 @@
+name: Monthly Update
+
+on:
+    schedule:
+        - cron: '0 0 1 * *'
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        container: docker/docker:latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            - name: Set version number
+              run: sed -i '' "s/YYYY-MM-DD/$(date -u +"%Y-%m-%d")/" static/Info.plist
+            - name: Build docset
+              run: docker compose up
+
+    create-branch:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Sync repo
+              run: gh repo sync cvn/Dash-User-Contributions -b master --force
+              env:
+                GITHUB_TOKEN: ${{ secrets.DASH_REPO_TOKEN }}
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                repository: cvn/Dash-User-Contributions
+                token: ${{ secrets.DASH_REPO_TOKEN }}
+                path: Dash-User-Contributions
+            - name: Create brach
+              run: |
+                cd Dash-User-Contributions
+                git checkout -b tldr-pages-update
+                git push origin tldr-pages-update
+            - name: Check directory
+              run: pwd
+            - name: Update version number in docset.json
+              run: |
+                sed -i 's/"version": ".*"/"version": "$(date +%Y-%m-%d)"/' Dash-User-Contributions/docsets/tldr/docset.json
+            - name: Move docset
+              run: mv tldr_pages.tgz Dash-User-Contributions/docsets/tldr/
+            - name: Commit changes
+              run: |
+                cd Dash-User-Contributions
+                git add --all .
+                git commit -m "Update TLDR pages docset to $(date +%Y-%m-%d)"
+                git push
