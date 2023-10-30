@@ -19,10 +19,6 @@ jobs:
             - name: Build docset
               run: docker compose up
 
-    create-branch:
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
             - name: Sync repo
               run: gh repo sync cvn/Dash-User-Contributions -b master --force
               env:
