@@ -32,7 +32,7 @@ jobs:
               run: |
                 cd Dash-User-Contributions
                 git checkout -b tldr-pages-update
-                git push origin tldr-pages-update
+                git push --force origin tldr-pages-update
             - name: Check directory
               run: pwd
             - name: Update version number in docset.json
