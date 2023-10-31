@@ -37,7 +37,7 @@ jobs:
               run: pwd
             - name: Update version number in docset.json
               run: |
-                sed -i 's/"version": ".*"/"version": "$new_version"/' Dash-User-Contributions/docsets/tldr/docset.json
+                sed -i "s/\"version\": \".*\"/\"version\": \"$new_version\"/" Dash-User-Contributions/docsets/tldr/docset.json
             - name: Move docset
               run: mv tldr_pages.tgz Dash-User-Contributions/docsets/tldr/
             - name: Commit changes
