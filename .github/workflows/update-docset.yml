@@ -43,6 +43,8 @@ jobs:
             - name: Commit changes
               run: |
                 cd Dash-User-Contributions
+                git config user.name "github-actions[bot]"
+                git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
                 git add --all .
                 git commit -m "Update TLDR pages docset to $new_version"
                 git push
