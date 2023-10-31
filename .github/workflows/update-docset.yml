@@ -28,13 +28,6 @@ jobs:
                 repository: cvn/Dash-User-Contributions
                 token: ${{ secrets.DASH_REPO_TOKEN }}
                 path: Dash-User-Contributions
-            - name: Create brach
-              run: |
-                cd Dash-User-Contributions
-                git checkout -b tldr-pages-update
-                git push --force origin tldr-pages-update
-            - name: Check directory
-              run: pwd
             - name: Update version number in docset.json
               run: |
                 sed -i "s/\"version\": \".*\"/\"version\": \"$new_version\"/" Dash-User-Contributions/docsets/tldr/docset.json
@@ -45,6 +38,7 @@ jobs:
                 cd Dash-User-Contributions
                 git config user.name "github-actions[bot]"
                 git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                git checkout -b tldr-pages-update
                 git add --all .
                 git commit -m "Update TLDR pages docset to $new_version"
-                git push
+                git push --force origin tldr-pages-update
