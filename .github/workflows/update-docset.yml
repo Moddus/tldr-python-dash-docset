@@ -11,28 +11,41 @@ jobs:
         steps:
             - name: Create version environment variable
               run: echo "new_version=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
+
+
+            # Build docset
+
             - name: Checkout code
               uses: actions/checkout@v4
+
             - name: Set version number
               run: sed -i "s/YYYY-MM-DD/$new_version/" static/Info.plist
+
             - name: Build docset
               run: docker compose up
 
-            - name: Sync repo
+
+            # Create PR
+
+            - name: Sync contributions repo
               run: gh repo sync cvn/Dash-User-Contributions -b master --force
               env:
                 GITHUB_TOKEN: ${{ secrets.DASH_REPO_TOKEN }}
+
             - name: Checkout code
               uses: actions/checkout@v4
               with:
                 repository: cvn/Dash-User-Contributions
                 token: ${{ secrets.DASH_REPO_TOKEN }}
                 path: Dash-User-Contributions
+
             - name: Update version number in docset.json
               run: |
                 sed -i "s/\"version\": \".*\"/\"version\": \"$new_version\"/" Dash-User-Contributions/docsets/tldr/docset.json
+
             - name: Move docset
               run: mv tldr_pages.tgz Dash-User-Contributions/docsets/tldr/
+
             - name: Commit changes
               run: |
                 cd Dash-User-Contributions
