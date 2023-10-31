@@ -55,3 +55,10 @@ jobs:
                 git add --all .
                 git commit -m "Update TLDR pages docset to $new_version"
                 git push --force origin tldr-update
+
+            - name: Create pull request to upstream
+              run: |
+                cd Dash-User-Contributions
+                gh pr create --head tldr-update --title "Update TLDR pages docset to $new_version" --body "This is an automated update created by [a workflow](https://github.com/cvn/tldr-python-dash-docset/actions/workflows/update-docset.yml)."
+              env:
+                GITHUB_TOKEN: ${{ secrets.DASH_REPO_TOKEN }}
