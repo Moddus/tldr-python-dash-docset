@@ -16,7 +16,11 @@ If you have python 3 and the [required packages](requirements.txt):
 
 Or use Docker to create an environment and build:
 
-    docker-compose up
+    docker compose up
+
+### Updating Dash
+
+This repo has [a workflow](https://github.com/cvn/tldr-python-dash-docset/actions/workflows/update-docset.yml) that regularly updates the docset in Dash.
 
 
 [1]: http://kapeli.com/dash
