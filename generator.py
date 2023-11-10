@@ -1,15 +1,27 @@
 #!/usr/bin/env python3
 
 import requests as req, zipfile, io, markdown2 as md, sqlite3, os, shutil, tarfile
+import re
 
-html_tmpl = """<html><head><link rel="stylesheet" type="text/css" href="../style.css"/></head><body><section id="tldr"><div id="page">%content%</div></section></body></html>"""
+html_tmpl = """<html><!-- Online page at {url} -->
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="../style.css"/>
+    </head>
+    <body>
+        <section id="tldr">
+            <div id="page">{content}</div>
+        </section>
+    </body>
+</html>"""
 
-doc_source         = "https://github.com/tldr-pages/tldr/archive/master.zip"
+online_url         = "https://github.com/tldr-pages/tldr/blob/main/pages"
+doc_source         = "https://github.com/tldr-pages/tldr/archive/refs/heads/main.zip"
 docset_path        = "tldrpages.docset"
 doc_path_contents  = docset_path + "/Contents/"
 doc_path_resources = docset_path + "/Contents/Resources/"
 doc_path           = docset_path + "/Contents/Resources/Documents/"
-doc_pref           = "tldr-master/pages"
+doc_pref           = "tldr-main/pages/"
 
 if os.path.exists(doc_path):
     try: shutil.rmtree(doc_path)
@@ -36,12 +48,12 @@ cur.execute('CREATE TABLE searchIndex(id INTEGER PRIMARY KEY, name TEXT, type TE
 cur.execute('CREATE UNIQUE INDEX anchor ON searchIndex (name, type, path);')
 
 # Generate tldr pages to HTML documents
-markdowner = md.Markdown()
+markdowner = md.Markdown(extras=["code-friendly"])
 with zipfile.ZipFile(io.BytesIO(r.content), "r") as archive:
     for path in archive.namelist():
         if path.startswith(doc_pref) and path.endswith(".md"):
             cmd_name = path[path.rfind("/")+1:-3]
-            sub_dir = path[len(doc_pref)+1:path.rfind("/")]
+            sub_dir = path[len(doc_pref):path.rfind("/")]
             sub_path = os.path.join(doc_path, sub_dir)
             if not os.path.exists(sub_path):
                 try: os.mkdir(sub_path)
@@ -54,19 +66,20 @@ with zipfile.ZipFile(io.BytesIO(r.content), "r") as archive:
             else:
                 cur.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)', (cmd_name, 'Command', sub_dir+'/'+cmd_name+".html"))
             doc = markdowner.convert(archive.read(path))
-            doc = html_tmpl.replace("%content%", doc)
-            with open(os.path.join(doc_path, path[len(doc_pref)+1:].replace(".md", ".html")), "wb") as html:
+            doc = re.sub(r'{{(.*?)}}', r'<em>\1</em>', doc)
+            doc = html_tmpl.format(url=online_url+'/'+sub_dir+'/'+cmd_name+'.md', content=doc)
+            with open(os.path.join(doc_path, path[len(doc_pref):].replace(".md", ".html")), "wb") as html:
                 html.write(doc.encode("utf-8"))
 db.commit()
 db.close()
 
 # Generate tldr pages index.html
 with open(os.path.join(doc_path, "index.html"), "w+") as html:
-    html.write('<html><head></head><body><h1>TLDR pages Docset</h1><br/>powered by <a href="http://tldr-pages.github.io">tldr-pages.github.io/</a>')
-    for dir in os.listdir(doc_path):
+    html.write('<html><!-- Online page at '+online_url+' --><head><meta charset="UTF-8"><title>TLDR pages</title></head><body><h1>TLDR pages</h1><br/>powered by <a href="http://tldr-pages.github.io">tldr-pages.github.io/</a>')
+    for dir in sorted(os.listdir(doc_path)):
         if os.path.isdir(os.path.join(doc_path, dir)):
-            html.write("<h2>%s</h2><ul>" % dir)
-            html.writelines(['<li><a href="%s/%s">%s</a></li>' % (dir, f, f[:-5]) for f in os.listdir(os.path.join(doc_path, dir))])
+            html.write('<a name="//apple_ref/cpp/Section/{name}" class="dashAnchor"></a><h2>{name}</h2><ul>'.format(name=dir))
+            html.writelines(['<li><a href="%s/%s">%s</a></li>' % (dir, f, f[:-5]) for f in sorted(os.listdir(os.path.join(doc_path, dir)))])
             html.write("</ul>")
     html.write('</body></html>')
 

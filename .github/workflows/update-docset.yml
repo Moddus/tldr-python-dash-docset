@@ -1,0 +1,68 @@
+name: Update Docset
+
+on:
+    schedule:
+        - cron: '0 0 1 * *'
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Create version environment variable
+              run: echo "new_version=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
+
+
+            # Build docset
+
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set version number
+              run: sed -i "s/YYYY-MM-DD/$new_version/" static/Info.plist
+
+            - name: Build docset
+              run: docker compose up
+
+
+            # Create PR
+
+            - name: Sync contributions repo
+              run: gh repo sync cvn/Dash-User-Contributions -b master --force
+              env:
+                GITHUB_TOKEN: ${{ secrets.DASH_REPO_TOKEN }}
+
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                repository: cvn/Dash-User-Contributions
+                token: ${{ secrets.DASH_REPO_TOKEN }}
+                path: Dash-User-Contributions
+
+            - name: Update version number in docset.json
+              run: |
+                sed -i "s/\"version\": \".*\"/\"version\": \"$new_version\"/" Dash-User-Contributions/docsets/tldr/docset.json
+
+            - name: Move docset
+              run: mv tldr_pages.tgz Dash-User-Contributions/docsets/tldr/
+
+            - name: Commit changes
+              run: |
+                cd Dash-User-Contributions
+                git config user.name "github-actions[bot]"
+                git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                git checkout -b tldr-update
+                git add --all .
+                git commit -m "Update TLDR pages docset to $new_version"
+                git push --force origin tldr-update
+
+            - name: Create pull request to upstream
+              run: |
+                cd Dash-User-Contributions
+                gh pr create \
+                  --repo Kapeli/Dash-User-Contributions \
+                  --head cvn:tldr-update \
+                  --title "Update TLDR pages docset to $new_version" \
+                  --body "This is an automated update created by [a workflow](https://github.com/cvn/tldr-python-dash-docset/actions/workflows/update-docset.yml)."
+              env:
+                GITHUB_TOKEN: ${{ secrets.DASH_REPO_TOKEN }}
